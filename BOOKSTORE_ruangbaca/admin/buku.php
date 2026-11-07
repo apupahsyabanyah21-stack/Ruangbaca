@@ -72,8 +72,8 @@ while ($k = mysqli_fetch_assoc($kategoriList)) $kategoriArr[] = $k;
           <td><?= rupiah($b['harga']) ?></td>
           <td><?= $b['stok'] ?></td>
           <td class="action-icons">
-            <a href="#" class="edit" onclick='openModal(<?= json_encode($b) ?>)'>✏️</a>
-            <a href="?delete=<?= $b['id'] ?>" class="delete" onclick="return confirm('Hapus buku ini?')">🗑️</a>
+            <a href="#" class="edit" onclick='openModal(<?= json_encode($b) ?>)'><?= icon('edit', 16) ?></a>
+            <a href="?delete=<?= $b['id'] ?>" class="delete" onclick="return confirm('Hapus buku ini?')"><?= icon('trash', 16) ?></a>
           </td>
         </tr>
       <?php endwhile; ?>

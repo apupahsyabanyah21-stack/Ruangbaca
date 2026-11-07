@@ -35,7 +35,7 @@ $belumDibaca = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) c FROM pe
       <div style="display:flex;justify-content:space-between;align-items:start;">
         <div>
           <strong><?= htmlspecialchars($m['nama']) ?></strong>
-          <span style="color:var(--text-muted);font-size:12.5px;"> — <?= htmlspecialchars($m['email']) ?></span>
+          <span style="color:var(--text-muted);font-size:12.5px;"> — <?= htmlspecialchars($m['email']) ?><?= !empty($m['telepon']) ? ' — ' . htmlspecialchars($m['telepon']) : '' ?></span>
           <?php if (!$m['dibaca']): ?><span class="badge badge-yellow" style="margin-left:8px;">Baru</span><?php endif; ?>
         </div>
         <span style="font-size:12px;color:var(--text-muted);"><?= date('d M Y H:i', strtotime($m['tanggal'])) ?></span>
@@ -43,8 +43,8 @@ $belumDibaca = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) c FROM pe
       <?php if ($m['subjek']): ?><p style="font-weight:600;margin-top:8px;font-size:14px;"><?= htmlspecialchars($m['subjek']) ?></p><?php endif; ?>
       <p style="margin-top:4px;color:var(--text-dark);font-size:14px;"><?= nl2br(htmlspecialchars($m['pesan'])) ?></p>
       <div class="action-icons" style="margin-top:10px;">
-        <?php if (!$m['dibaca']): ?><a href="?read=<?= $m['id'] ?>" class="edit">✔️ Tandai Dibaca</a><?php endif; ?>
-        <a href="?delete=<?= $m['id'] ?>" class="delete" onclick="return confirm('Hapus pesan ini?')">🗑️ Hapus</a>
+        <?php if (!$m['dibaca']): ?><a href="?read=<?= $m['id'] ?>" class="edit"><?= icon('check-circle', 15) ?> Tandai Dibaca</a><?php endif; ?>
+        <a href="?delete=<?= $m['id'] ?>" class="delete" onclick="return confirm('Hapus pesan ini?')"><?= icon('trash', 15) ?> Hapus</a>
       </div>
     </div>
   <?php endwhile; ?>

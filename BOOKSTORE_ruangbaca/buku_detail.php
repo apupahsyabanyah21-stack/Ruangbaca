@@ -10,7 +10,7 @@ require_once __DIR__ . '/includes/header.php';
 <div class="container section">
   <div class="grid" style="grid-template-columns: 320px 1fr; gap:40px;">
     <div class="book-cover card" style="height:420px;font-size:70px;">
-      <?= $b['gambar'] ? '<img src="'.base_url('uploads/'.$b['gambar']).'">' : '📖' ?>
+      <?= $b['gambar'] ? '<img src="'.base_url('uploads/'.$b['gambar']).'">' : icon('book-open', 40) ?>
     </div>
     <div>
       <span class="kategori-tag"><?= htmlspecialchars($b['nama_kategori'] ?? '-') ?></span>
@@ -19,11 +19,12 @@ require_once __DIR__ . '/includes/header.php';
       <div class="harga" style="font-size:26px;margin-bottom:16px;"><?= rupiah($b['harga']) ?></div>
       <p style="margin-bottom:20px;line-height:1.8;"><?= nl2br(htmlspecialchars($b['deskripsi'])) ?></p>
       <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;">Stok tersedia: <?= (int)$b['stok'] ?></p>
-      <form method="post" action="<?= base_url('cart.php') ?>">
+      <form method="post" action="<?= base_url('cart.php') ?>" class="add-to-cart-form" style="display:inline-block;">
         <input type="hidden" name="buku_id" value="<?= $b['id'] ?>">
+        <input type="hidden" name="kembali_ke" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
         <button type="submit" name="add_to_cart" class="btn btn-primary" <?= $b['stok']<1?'disabled':'' ?>>+ Tambah ke Keranjang</button>
-        <a href="<?= base_url('katalog.php') ?>" class="btn btn-outline">Kembali ke Katalog</a>
       </form>
+      <a href="<?= base_url('katalog.php') ?>" class="btn btn-outline">Kembali ke Katalog</a>
     </div>
   </div>
 </div>

@@ -22,16 +22,19 @@ Admin & User (dibedakan lewat kolom `role`), sesuai desain Figma yang diberikan.
 
 ## 2. Akun Default
 
+Setelah import database, buka file berikut **sekali saja** lewat browser untuk memastikan
+password admin default aktif dan valid di server kamu (hash password dibuat langsung oleh
+PHP di server kamu sendiri, jadi dijamin cocok):
+
+```
+http://localhost/bookstore/reset_admin.php
+```
+
+Setelah muncul pesan berhasil, **hapus file `reset_admin.php`** dari server (alasan keamanan).
+
 **Login Admin** (`/admin/login.php`):
 - Email: `admin@ruangbaca.com`
 - Password: `admin123`
-
-> Jika hash password di `database.sql` tidak cocok dengan environment PHP kamu,
-> generate ulang hash dengan menjalankan script PHP berikut lalu update kolom
-> `password` pada tabel `users`:
-> ```php
-> <?php echo password_hash('admin123', PASSWORD_DEFAULT);
-> ```
 
 **User**: silakan daftar sendiri lewat halaman **Buat Akun** (`/register.php`).
 
@@ -79,3 +82,11 @@ bookstore/
 Ini adalah project pembelajaran. Untuk produksi, tambahkan CSRF token,
 rate limiting login, validasi upload file lebih ketat, dan gunakan prepared
 statements (mysqli_prepare) alih-alih string interpolation langsung.
+
+## Metode Pembayaran (COD, GoPay, DANA, Transfer Bank)
+
+1. Jalankan `migration_pembayaran.sql` di phpMyAdmin (database `ruang_baca` → tab SQL) **sekali saja**.
+   Instalasi baru dari `database.sql` sudah otomatis punya kolomnya.
+2. Ganti nomor GoPay / DANA / rekening bank di `includes/payment.php` (fungsi `daftar_metode_bayar()`).
+3. Gambar QRIS ada di `assets/img/qris.jpg` (ganti dengan QRIS asli kalau sudah ada).
+4. Bukti pembayaran user tersimpan di `uploads/bukti_bayar/` dan bisa dilihat/diverifikasi admin di menu Pesanan.

@@ -15,7 +15,8 @@ require_admin();
 <div class="admin-body">
 <?php require __DIR__ . '/sidebar.php'; ?>
 <main class="admin-main">
+<div class="admin-content">
   <div class="admin-topbar">
-    <h1><?= $page_title ?? '' ?></h1>
-    <div class="who">👤 <?= htmlspecialchars($_SESSION['nama']) ?> (Admin)</div>
+    <h1><?= icon('menu', 20) ?> <?= $page_title ?? '' ?></h1>
+    <div class="who"><?= icon('user', 16) ?> <?= htmlspecialchars($_SESSION['nama']) ?> (Admin)</div>
   </div>
