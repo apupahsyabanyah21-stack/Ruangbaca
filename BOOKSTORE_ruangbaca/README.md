@@ -90,3 +90,13 @@ statements (mysqli_prepare) alih-alih string interpolation langsung.
 2. Ganti nomor GoPay / DANA / rekening bank di `includes/payment.php` (fungsi `daftar_metode_bayar()`).
 3. Gambar QRIS ada di `assets/img/qris.jpg` (ganti dengan QRIS asli kalau sudah ada).
 4. Bukti pembayaran user tersimpan di `uploads/bukti_bayar/` dan bisa dilihat/diverifikasi admin di menu Pesanan.
+
+## Fitur Refund
+1. Jalankan `migration_refund.sql` di phpMyAdmin (aman dijalankan ulang, termasuk jika versi lama sudah pernah dijalankan).
+2. Alur:
+   - User mengajukan refund di Pesanan Saya (alasan + foto bukti) -> status **Menunggu**.
+   - Admin memeriksa di menu **Refund**, lalu **Disetujui** (ditampilkan sebagai menunggu barang kembali) atau **Ditolak** (alasan wajib).
+   - User mengirim balik buku dan mengisi kurir + nomor resi (`refund_kirim.php`), status tetap Disetujui.
+   - Setelah buku tiba dan diperiksa, admin menekan **Barang Diterima**.
+   - Admin transfer dana ke user, lalu mengunggah bukti transfer -> status **Selesai**; user bisa melihat bukti transfernya di Pesanan Saya.
+3. Foto disimpan di `uploads/refund/`. Alamat tujuan kirim balik: konstanta `REFUND_ALAMAT_TOKO` di `includes/refund.php`.

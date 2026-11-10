@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_bayar'])) {
 }
 
 require_once __DIR__ . '/includes/header.php';
-$list = mysqli_query($conn, "SELECT p.*, u.nama, u.email FROM pesanan p JOIN users u ON p.user_id=u.id ORDER BY p.tanggal DESC");
+$list = mysqli_query($conn, "SELECT p.*, u.nama, u.email, " . SQL_URUT_TRANSAKSI . " FROM pesanan p JOIN users u ON p.user_id=u.id ORDER BY p.id ASC");
 
 function badgeClass($status) {
     return match($status) {
@@ -54,14 +54,14 @@ function bayarBadge($s) {
   </div>
   <div class="table-wrap">
     <table class="data-table" style="text-align:center;">
-      <thead><tr><th>ID</th><th>Pelanggan</th><th>Total</th><th>Metode</th><th>Pembayaran</th><th>Status</th><th>Tanggal</th><th>Aksi</th></tr></thead>
+      <thead><tr><th>ID Transaksi</th><th>Pelanggan</th><th>Total</th><th>Metode</th><th>Pembayaran</th><th>Status</th><th>Tanggal</th><th>Aksi</th></tr></thead>
       <tbody>
       <?php if (mysqli_num_rows($list) === 0): ?>
         <tr><td colspan="8" style="text-align:center;color:var(--text-muted);">Belum ada pesanan</td></tr>
       <?php endif; ?>
       <?php while ($p = mysqli_fetch_assoc($list)): ?>
         <tr>
-          <td>#<?= $p['id'] ?></td>
+          <td style="white-space:nowrap;font-weight:600;"><?= kode_transaksi($p) ?></td>
           <td><div style="line-height:1.4;"><?= htmlspecialchars($p['nama']) ?></div><span style="color:var(--text-muted);font-size:12px;"><?= htmlspecialchars($p['email']) ?></span></td>
           <td><?= rupiah($p['total']) ?></td>
           <td><?= htmlspecialchars($p['metode_pembayaran']) ?></td>

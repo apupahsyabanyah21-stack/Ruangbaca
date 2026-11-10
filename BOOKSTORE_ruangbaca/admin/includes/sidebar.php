@@ -9,6 +9,7 @@
     <a href="kategori.php" class="<?= $active=='kategori'?'active':'' ?>"><?= icon('tag', 18) ?> <span class="txt">Kategori</span></a>
     <a href="pengguna.php" class="<?= $active=='pengguna'?'active':'' ?>"><?= icon('user', 18) ?> <span class="txt">Pengguna</span></a>
     <a href="pesanan.php" class="<?= $active=='pesanan'?'active':'' ?>"><?= icon('package', 18) ?> <span class="txt">Pesanan</span></a>
+    <a href="refund.php" class="<?= $active=='refund'?'active':'' ?>"><?= icon('undo', 18) ?> <span class="txt">Refund</span></a>
     <a href="pesan_masuk.php" class="<?= $active=='pesan_masuk'?'active':'' ?>"><?= icon('mail', 18) ?> <span class="txt">Pesan Masuk</span></a>
   </nav>
   <div class="logout-link">

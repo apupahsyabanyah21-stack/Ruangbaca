@@ -8,7 +8,7 @@ $totalUser = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) c FROM user
 $totalPesanan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) c FROM pesanan"))['c'];
 $pesanBelumDibaca = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) c FROM pesan_masuk WHERE dibaca=0"))['c'];
 
-$recent = mysqli_query($conn, "SELECT p.*, u.nama, u.email FROM pesanan p JOIN users u ON p.user_id=u.id ORDER BY p.tanggal DESC LIMIT 6");
+$recent = mysqli_query($conn, "SELECT p.*, u.nama, u.email, " . SQL_URUT_TRANSAKSI . " FROM pesanan p JOIN users u ON p.user_id=u.id ORDER BY p.tanggal DESC, p.id DESC LIMIT 6");
 
 function statusBadgeClass($status) {
     return match($status) {
@@ -46,14 +46,14 @@ function statusBadgeClass($status) {
   <div class="card-head"><h3>Pesanan Terbaru</h3></div>
   <div class="table-wrap">
     <table class="data-table" style="text-align:center;">
-      <thead><tr><th>Id Pesanan</th><th>Pelanggan</th><th>Total</th><th>Status</th></tr></thead>
+      <thead><tr><th>ID Transaksi</th><th>Pelanggan</th><th>Total</th><th>Status</th></tr></thead>
       <tbody>
       <?php if (mysqli_num_rows($recent) === 0): ?>
         <tr><td colspan="4" style="text-align:center;color:var(--text-muted);">Belum ada pesanan</td></tr>
       <?php endif; ?>
       <?php while ($r = mysqli_fetch_assoc($recent)): ?>
         <tr>
-          <td>ord<?= $r['id'] ?></td>
+          <td style="white-space:nowrap;font-weight:600;"><?= kode_transaksi($r) ?></td>
           <td><div style="line-height:1.4;"><?= htmlspecialchars($r['nama']) ?></div><span style="color:var(--text-muted);font-size:12px;"><?= htmlspecialchars($r['email']) ?></span></td>
           <td><?= rupiah($r['total']) ?></td>
           <td><span class="status-badge <?= statusBadgeClass($r['status']) ?>"><?= $r['status'] ?></span></td>

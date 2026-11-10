@@ -22,6 +22,19 @@ function clean($conn, $str) {
     return mysqli_real_escape_string($conn, trim($str));
 }
 
+// -------------------- ID Transaksi --------------------
+// Format: TBJ + tanggal pesanan (ddmmyy) + nomor urut transaksi keseluruhan (3 digit)
+// Nomor urut terus bertambah dari pesanan pertama: 001, 002, 003, ... (tidak diulang tiap tanggal)
+// Contoh: pesanan ke-1 tanggal 09-11-2026 => TBJ091126001, pesanan ke-2 tanggal 10-11-2026 => TBJ101126002
+// Nomor urut dihitung langsung di query lewat kolom `urut_transaksi` (lihat SQL_URUT_TRANSAKSI),
+// jadi tidak perlu mengubah struktur database. Tabel pesanan harus di-alias `p`.
+const SQL_URUT_TRANSAKSI = "(SELECT COUNT(*) FROM pesanan x WHERE x.id <= p.id) AS urut_transaksi";
+
+function kode_transaksi(array $pesanan) {
+    return 'TBJ' . date('dmy', strtotime($pesanan['tanggal']))
+         . str_pad((string)(int)($pesanan['urut_transaksi'] ?? 0), 3, '0', STR_PAD_LEFT);
+}
+
 // -------------------- Ikon SVG (garis, bukan emoji) --------------------
 function icon($name, $size = 20) {
     $paths = [
@@ -56,6 +69,7 @@ function icon($name, $size = 20) {
         'wallet'     => '<path d="M3.5 7.5A2 2 0 0 1 5.5 5.5H17a1.5 1.5 0 0 1 1.5 1.5v1.5"/><path d="M3.5 7.5v10a2 2 0 0 0 2 2h13a1.5 1.5 0 0 0 1.5-1.5v-8a1.5 1.5 0 0 0-1.5-1.5H5.5a2 2 0 0 1-2-1.5"/><circle cx="16" cy="13.5" r="1.1"/>',
         'bag'        => '<path d="M5 8h14l-1 12a1 1 0 0 1-1 .9H7a1 1 0 0 1-1-.9L5 8Z"/><path d="M8.5 8V6.5a3.5 3.5 0 0 1 7 0V8"/>',
         'printer'    => '<path d="M7 9V4h10v5"/><rect x="4.5" y="9" width="15" height="8" rx="1.8"/><path d="M7.5 14h9v6h-9z"/>',
+        'undo'       => '<path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-15-6.7L3 13"/>',
         'clock'      => '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
     ];
     $p = $paths[$name] ?? $paths['book'];

@@ -7,7 +7,7 @@ require_login();
 // ---- DATA ----
 $id = (int)($_GET['id'] ?? 0);
 $filterUser = is_admin() ? '' : ' AND p.user_id=' . (int)$_SESSION['user_id'];
-$res = mysqli_query($conn, "SELECT p.*, u.nama, u.kontak FROM pesanan p JOIN users u ON p.user_id = u.id WHERE p.id=$id" . $filterUser);
+$res = mysqli_query($conn, "SELECT p.*, u.nama, u.kontak, " . SQL_URUT_TRANSAKSI . " FROM pesanan p JOIN users u ON p.user_id = u.id WHERE p.id=$id" . $filterUser);
 $pesanan = mysqli_fetch_assoc($res);
 if (!$pesanan) {
     header('Location: ' . base_url('index.php'));
@@ -19,7 +19,7 @@ while ($d = mysqli_fetch_assoc($detail)) $rows[] = $d;
 // ---- END DATA ----
 
 $e = fn($s) => htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8');
-$nomorRef = str_pad($pesanan['id'], 12, '0', STR_PAD_LEFT);
+$nomorRef = kode_transaksi($pesanan);
 $metode = metode_dari_nama($pesanan['metode_pembayaran']);
 $statusBayar = $pesanan['status_bayar'] ?? 'cod';
 $auto = isset($_GET['auto']);
@@ -83,7 +83,7 @@ td { padding: 11px 8px; border-bottom: 1px solid #E6D8BB; vertical-align: top; }
 <div class="paper">
   <div class="head">
     <div class="brand"><img src="<?= $e(base_url('assets/img/logo.png')) ?>" alt=""> Ruang Baca</div>
-    <div class="judul"><strong>BUKTI PEMBAYARAN</strong><span>No. Ref <?= $nomorRef ?></span></div>
+    <div class="judul"><strong>BUKTI PEMBAYARAN</strong><span>ID Transaksi <?= $nomorRef ?></span></div>
   </div>
   <div class="body">
     <div class="meta">

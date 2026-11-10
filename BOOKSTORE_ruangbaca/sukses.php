@@ -5,7 +5,7 @@ require_once __DIR__ . '/includes/payment.php';
 require_login();
 
 $id = (int)($_GET['id'] ?? 0);
-$res = mysqli_query($conn, "SELECT p.*, u.nama FROM pesanan p JOIN users u ON p.user_id = u.id WHERE p.id=$id AND p.user_id=" . (int)$_SESSION['user_id']);
+$res = mysqli_query($conn, "SELECT p.*, u.nama, " . SQL_URUT_TRANSAKSI . " FROM pesanan p JOIN users u ON p.user_id = u.id WHERE p.id=$id AND p.user_id=" . (int)$_SESSION['user_id']);
 $pesanan = mysqli_fetch_assoc($res);
 
 if (!$pesanan) {
@@ -19,7 +19,7 @@ while ($d = mysqli_fetch_assoc($detail)) {
     $judulBuku[] = $d['judul'] . ' x' . $d['jumlah'];
 }
 
-$nomorRef = str_pad($pesanan['id'], 12, '0', STR_PAD_LEFT);
+$nomorRef = kode_transaksi($pesanan);
 
 require_once __DIR__ . '/includes/header.php';
 ?>
@@ -31,7 +31,7 @@ require_once __DIR__ . '/includes/header.php';
     <hr style="border:none;border-top:1px dashed var(--border);margin-bottom:20px;">
 
     <div style="text-align:left;font-size:14px;">
-      <div class="summary-row"><span style="color:var(--text-muted);">Nomor Ref</span><span style="font-weight:600;"><?= $nomorRef ?></span></div>
+      <div class="summary-row"><span style="color:var(--text-muted);">ID Transaksi</span><span style="font-weight:600;"><?= $nomorRef ?></span></div>
       <div class="summary-row"><span style="color:var(--text-muted);">Waktu Pemesanan</span><span style="font-weight:600;"><?= date('d-m-Y, H:i', strtotime($pesanan['tanggal'])) ?></span></div>
       <div class="summary-row"><span style="color:var(--text-muted);">Metode Pembayaran</span><span style="font-weight:600;"><?= htmlspecialchars($pesanan['metode_pembayaran']) ?></span></div>
       <div class="summary-row"><span style="color:var(--text-muted);">Nama Pemesan</span><span style="font-weight:600;"><?= htmlspecialchars($pesanan['nama']) ?></span></div>
